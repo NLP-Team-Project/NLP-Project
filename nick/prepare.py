@@ -1,5 +1,16 @@
-github_username = 'nickpedri'
-github_token = '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'
+import os
+import json
+from typing import Dict, List, Optional, Union, cast
+import requests
+
+from env import github_token, github_username
+
+# TODO: Make a github personal access token.
+#     1. Go here and generate a personal access token https://github.com/settings/tokens
+#        You do _not_ need select any scopes, i.e. leave all the checkboxes unchecked
+#     2. Save it in your env.py file under the variable `github_token`
+# TODO: Add your github username to your env.py file under the variable `github_username`
+# TODO: Add more repositories to the `REPOS` list below.
 
 headers = {"Authorization": f"token {github_token}",
            "User-Agent": github_username}
@@ -8,14 +19,15 @@ if headers["Authorization"] == "token " or headers["User-Agent"] == "":
     raise Exception("You need to follow the instructions marked TODO in this script before trying to use it")
 
 
+REPOS = []
+
+
 def github_api_request(url: str) -> Union[List, Dict]:
     response = requests.get(url, headers=headers)
     response_data = response.json()
     if response.status_code != 200:
-        raise Exception(
-            f"Error response from github api! status code: {response.status_code}, "
-            f"response: {json.dumps(response_data)}"
-        )
+        raise Exception(f"Error response from github api! status code: {response.status_code}, "
+                        f"response: {json.dumps(response_data)}")
     return response_data
 
 
@@ -25,9 +37,7 @@ def get_repo_language(repo: str) -> str:
     if type(repo_info) is dict:
         repo_info = cast(Dict, repo_info)
         return repo_info.get("language", None)
-    raise Exception(
-        f"Expecting a dictionary response from {url}, instead got {json.dumps(repo_info)}"
-    )
+    raise Exception(f"Expecting a dictionary response from {url}, instead got {json.dumps(repo_info)}")
 
 
 def get_repo_contents(repo: str) -> List[Dict[str, str]]:
@@ -37,8 +47,7 @@ def get_repo_contents(repo: str) -> List[Dict[str, str]]:
         contents = cast(List, contents)
         return contents
     raise Exception(
-        f"Expecting a list response from {url}, instead got {json.dumps(contents)}"
-    )
+        f"Expecting a list response from {url}, instead got {json.dumps(contents)}")
 
 
 def get_readme_download_url(files: List[Dict[str, str]]) -> str:
