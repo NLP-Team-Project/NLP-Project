@@ -19,7 +19,7 @@ if headers["Authorization"] == "token " or headers["User-Agent"] == "":
     raise Exception("You need to follow the instructions marked TODO in this script before trying to use it")
 
 
-REPOS = []
+# REPOS = []
 
 
 def github_api_request(url: str) -> Union[List, Dict]:
@@ -66,8 +66,12 @@ def process_repo(repo: str) -> Dict[str, str]:
     Takes a repo name like "gocodeup/codeup-setup-script" and returns a
     dictionary with the language of the repo and the readme contents.
     """
+    print(repo)
     contents = get_repo_contents(repo)
-    readme_contents = requests.get(get_readme_download_url(contents)).text
+    try:
+        readme_contents = requests.get(get_readme_download_url(contents)).text
+    except:
+        readme_contents = 'failedreadme'
     return {
         "repo": repo,
         "language": get_repo_language(repo),
@@ -75,9 +79,9 @@ def process_repo(repo: str) -> Dict[str, str]:
     }
 
 
-def scrape_github_data() -> List[Dict[str, str]]:
+def scrape_github_data(REPOS) -> List[Dict[str, str]]:
     """
-    Loop through all of the repos and process them. Returns the processed data.
+    Loop through all the repos and process them. Returns the processed data.
     """
     return [process_repo(repo) for repo in REPOS]
 
