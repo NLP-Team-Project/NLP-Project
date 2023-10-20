@@ -89,3 +89,40 @@ def scrape_github_data(REPOS) -> List[Dict[str, str]]:
 if __name__ == "__main__":
     data = scrape_github_data()
     json.dump(data, open("data2.json", "w"), indent=1)
+
+
+def search_github_repositories(search_query, repository_type="repositories", per_page=100):
+    # Define the base URL for the GitHub API
+    base_url = "https://api.github.com/search/repositories"
+    # Set up headers with your GitHub token and user-agent
+    headers = {
+        "Authorization": f"token {github_token}",
+        "User-Agent": github_username
+    }
+    # Initialize an empty list to store repositories
+    all_repositories = []
+    # Initialize variables for pagination
+    page = 1
+    total_repos = 0
+    while total_repos < 1000:
+        params = {"q": search_query,
+                  "type": repository_type,
+                  "per_page": per_page,
+                  "page": page}
+        # Send a GET request to the GitHub API
+        response = requests.get(base_url, headers=headers, params=params)
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            data = response.json()
+            # Extract the repositories from the current page
+            repositories = data.get("items", [])
+            # Append the current page's repositories to the list
+            all_repositories.extend(repositories)
+            # Update the total count of repositories retrieved
+            total_repos += len(repositories)
+            # Increment the page number for the next page
+            page += 1
+        else:
+            print(f"Failed to retrieve data. Status code: {response.status_code}")
+            break
+    return all_repositories
