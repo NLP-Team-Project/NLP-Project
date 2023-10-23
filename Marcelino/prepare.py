@@ -3,6 +3,7 @@ import unicodedata
 import re
 import nltk
 import os
+import markdown
 
 from requests import get
 from bs4 import BeautifulSoup
@@ -13,13 +14,26 @@ from nltk.corpus import stopwords
 
 def basic_clean(text):
     
+    text = text.lower()
+    
+    text = re.sub(r"http\S+|www\S+", "", text)    
     
     text = (unicodedata.normalize('NFKD', text)
              .encode('ascii', 'ignore')
              .decode('utf-8', 'ignore')
-             .lower())
+             )    
+    
+    text = markdown.markdown(text)
+    
+    soup = BeautifulSoup(text, 'html.parser')
+    
+    text = soup.get_text()
     
     text = re.sub(r"[^a-z\w\s]", '', text)
+    
+    pattern = r"[^a-zA-Z0-9\s'\+]|(?<!\w)C\+\+(?!\w)"
+    
+    text = re.sub(pattern, "", text)
     
     return text
 
@@ -32,7 +46,7 @@ def tokenize(text):
     
     text = re.sub(r"[^a-z\w\s]", '', text)
     
-    text = re.sub(r'\d', '', text, count = 1)
+    text = re.sub(r"\s\d{1}\s", "", text)
     
     return text
 
