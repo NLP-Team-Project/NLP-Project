@@ -12,7 +12,7 @@ def xy_split(df):
     This function returns subsets of your data. One with all columns except your target variable, and the other with only the target variable.
     '''
     
-    return df.drop(columns= 'language'), df.language
+    return df.drop(columns = 'language'), df.language
 
 
 

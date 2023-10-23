@@ -144,7 +144,6 @@ def actual_languages(df):
     return df
 
 
-
 def labels_count(df):
     
     labels = pd.concat([df.language.value_counts(),
