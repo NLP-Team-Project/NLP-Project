@@ -128,3 +128,5 @@ def word_counts(dataframe, col, data):
         .apply(lambda s: s.astype(int))
 
     return total_counts
+
+

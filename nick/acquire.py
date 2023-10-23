@@ -5,6 +5,10 @@ import requests
 
 from env import github_token, github_username
 
+import prepare as prp
+import pandas as pd
+
+
 # TODO: Make a github personal access token.
 #     1. Go here and generate a personal access token https://github.com/settings/tokens
 #        You do _not_ need select any scopes, i.e. leave all the checkboxes unchecked
@@ -126,3 +130,10 @@ def search_github_repositories(search_query, repository_type="repositories", per
             print(f"Failed to retrieve data. Status code: {response.status_code}")
             break
     return all_repositories
+
+
+def acquire_repos():
+    repo = pd.read_csv('all_repos.csv')
+    repo = prp.cleanse(repo, 'readme_contents')
+    repo.language = prp.top_languages(repo, 4)
+    return repo
