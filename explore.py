@@ -170,7 +170,7 @@ def test1(df):
 def plt_unique_words(df):
     
     plt.figure(figsize=(12, 6))
-    plt.bar(df['language'], df['unique_word'], color = 'lightseagreen)
+    plt.bar(df['language'], df['unique_word'], color = 'lightseagreen')
     plt.xlabel('language')
     plt.ylabel('Unique Words Count')
     plt.title('Number of Unique Words by Programming Language')

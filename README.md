@@ -5,13 +5,11 @@ Scraping githubs and discovering most frequent program languages.
 
 
 ## Goal
-* The purpose of this model is to predict borrowers that default.
-* My goal is to find specific features that drive defaults.
 
-## Initial hypotheses
+* Scrape repo names from Github, and use api requests to create a database of repos
+* Explore data to see what words are most common in each respective language's readmes
+* Build a classification model that predicts program languages used in each repo on Github
 
-* Null Hypothesis: Features do not drive borrowers to default
-* Alternative Hypothesis: Features drive borrowers to default
 
 ## Data dictionary
 
@@ -21,15 +19,18 @@ Scraping githubs and discovering most frequent program languages.
 |language        |Target       |string    |Programming language used.|
 |readme_contents |Feature      |string    |Contents for every readme.|
 
+
 ## Planning:
-- Generate questions to ask about the data set based off of what I want my model to predict. Do any features have an impact on defaults?. What features significantly drive defaults?
-- Determine the format. Final report should be in .ipynb, Modules should be in .py, Predictions should be in .csv.
-- Determine audience and develop speech and presention accordingly. Audience will be lead data scientist.
-- Determine significance between features and defaults.
-- Develop my null hypothsisis and alternative hypothesis. 
-- Determine what model to create
-  
+- Create a project plan
+- Create a web scraper to acquire repo names and use api request to acquire repo data
+- Clean up the data by tokenizing it, lammatizing, stemming, remove non ASCII characters, etc...
+- Explore data to find what words are most common in what language's repo
+- Create models to 
+
 ## Acquisition:
+  
+  - Create a web scraper to acquire repo names and use api request to acquire repo data
+
 - Data acquired from Coursera into a csv file
 
 ## Preparation
