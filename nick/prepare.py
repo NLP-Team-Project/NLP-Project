@@ -9,8 +9,8 @@ from sklearn.model_selection import train_test_split
 
 import pandas as pd
 
-nltk.download('wordnet')
-nltk.download('omw-1.4')
+# nltk.download('wordnet')
+# nltk.download('omw-1.4')
 
 
 def basic_clean(filthy_data):
@@ -129,4 +129,16 @@ def word_counts(dataframe, col, data):
 
     return total_counts
 
+
+def word_appearances(word_count, og_repo):
+    unique_words = list(word_count.index)
+    total_appearances = []
+
+    for word in unique_words:
+        n = 0
+        for row in og_repo.clean:
+            words = set(row.split())
+            if word in words:
+                n += 1
+        total_appearances.append(n)
 

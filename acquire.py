@@ -99,8 +99,10 @@ def search_github_repositories(search_query, repository_type="repositories", per
     # Define the base URL for the GitHub API
     base_url = "https://api.github.com/search/repositories"
     # Set up headers with your GitHub token and user-agent
-    headers = {"Authorization": f"token {github_token}",
-               "User-Agent": github_username}
+    headers = {
+        "Authorization": f"token {github_token}",
+        "User-Agent": github_username
+    }
     # Initialize an empty list to store repositories
     all_repositories = []
     # Initialize variables for pagination
@@ -132,6 +134,6 @@ def search_github_repositories(search_query, repository_type="repositories", per
 
 def acquire_repos():
     repo = pd.read_csv('all_repos.csv')
-    repo = prp.cleanse(repo, 'readme_contents', )
+    repo = prp.cleanse(repo, 'readme_contents')
     repo.language = prp.top_languages(repo, 4)
     return repo

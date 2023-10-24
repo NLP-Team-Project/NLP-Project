@@ -4,6 +4,7 @@ import re
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
 from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 from sklearn.model_selection import train_test_split
 
@@ -61,14 +62,15 @@ def stem(data):
 def cleanse(dataframe, col='', stemm=True, lem=True, extra_words=[], exclude_words=[]):
     """This function accepts a dataframe with a column name of the target variable data. It returns a dataframe with
     clean, lemmatized, and stemmed data. It also removes stopwords."""
-    df = dataframe.copy()
+    df = dataframe.copy()  # Create copy of df
     df['clean'] = df[col].apply(basic_clean)
+    # Create clean column Remove stopwords
     df['clean'] = df['clean'].apply(remove_stopwords, extra_words=extra_words, exclude_words=exclude_words)
-    if stemm:
+    if stemm:  # Returns stemmed column if stemm is True
         df['stemmed'] = df.clean.apply(stem)
-    if lem:
+    if lem:  # Returns stemmed column if lem is True
         df['lemmatized'] = df.clean.apply(lemmatize)
-    return df
+    return df  # Return df
 
 
 def train_val_test(df, strat='None', seed=100, stratify=False, print_shape=True):  # Splits dataframe
@@ -95,6 +97,7 @@ def split_xy(df, target=''):
 
 
 def replace_values_not_in_list(series, mylist, false_value):
+    """This function will accept a series and a list. If each"""
     new_values = []
     for value in series:
         if value in mylist:
@@ -133,3 +136,35 @@ def word_counts(dataframe, col, data):
     return total_counts
 
 
+def word_appearances(word_count, og_repo):
+    unique_words = list(word_count.index)
+    total_appearances = []
+
+    for word in unique_words:
+        n = 0
+        for row in og_repo.clean:
+            words = set(row.split())
+            if word in words:
+                n += 1
+        total_appearances.append(n)
+    return total_appearances
+
+
+def test_model(model, x, y):
+    res = pd.DataFrame({'actual': y,
+                        'preds': model.predict(x)})
+    print(f' {round((res.actual == res.preds).sum()/(len(res)),2)}')
+
+
+def preprocess(train, val, test):
+    X_train, y_train = split_xy(train, 'language')
+    X_val, y_val = split_xy(val, 'language')
+    X_test, y_test = split_xy(test, 'language')
+
+    tfidf = TfidfVectorizer()
+
+    X_train_tfidf = tfidf.fit_transform(X_train.lemmatized)
+    X_val_tfidf = tfidf.transform(X_val.lemmatized)
+    X_test_tfidf = tfidf.transform(X_test.lemmatized)
+
+    return X_train_tfidf, y_train, X_val_tfidf, y_val, X_test_tfidf, y_test
