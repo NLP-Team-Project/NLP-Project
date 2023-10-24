@@ -1,10 +1,18 @@
 import unicodedata
 import re
-
+import markdown
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
+import os
+import markdown
+
+from requests import get
+from bs4 import BeautifulSoup
+
+from nltk.tokenize.toktok import ToktokTokenizer
+from nltk.corpus import stopwords
 
 from sklearn.model_selection import train_test_split
 
@@ -168,3 +176,112 @@ def preprocess(train, val, test):
     X_test_tfidf = tfidf.transform(X_test.lemmatized)
 
     return X_train_tfidf, y_train, X_val_tfidf, y_val, X_test_tfidf, y_test
+
+
+def basic_clean2(text):
+    
+    text = text.lower()
+    
+    text = re.sub(r"http\S+|www\S+", "", text)    
+    
+    text = (unicodedata.normalize('NFKD', text)
+             .encode('ascii', 'ignore')
+             .decode('utf-8', 'ignore')
+             )    
+    
+    text = markdown.markdown(text)
+    
+    soup = BeautifulSoup(text, 'html.parser')
+    
+    text = soup.get_text()
+    
+    text = re.sub(r"[^a-z\w\s]", '', text)
+    
+    pattern = r"[^a-zA-Z0-9\s'\+]|(?<!\w)C\+\+(?!\w)"
+    
+    text = re.sub(pattern, "", text)
+    
+    return text
+
+
+def tokenize2(text):
+    
+    tokenizer = nltk.tokenize.ToktokTokenizer()
+
+    text = tokenizer.tokenize(text, return_str=True)
+    
+    text = re.sub(r"[^a-z\w\s]", '', text)
+    
+    text = re.sub(r"\s\d{1}\s", "", text)
+    
+    return text
+
+
+def stem2(text):
+    
+    ps = nltk.porter.PorterStemmer()
+    
+    stems = [ps.stem(word) for word in text.split()]
+    
+    text_stemmed = ' '.join(stems)
+    
+    return text_stemmed
+
+
+def lemmatize2(text):
+    
+    wnl = nltk.stem.WordNetLemmatizer()
+    
+    lemmas = [wnl.lemmatize(word) for word in text.split()]
+    
+    text_lemmatized = ' '.join(lemmas)
+
+    return text_lemmatized
+
+
+def remove_stopwords2(text, extra_words = None, exclude_words = None):
+    
+    stopword_list = stopwords.words('english')
+    
+    if exclude_words is not None:
+        
+        for w in exclude_words:
+        
+            stopword_list.remove(w)
+    
+    if extra_words is not None:
+        
+        for w in extra_words:
+        
+            stopword_list.append(w)
+    
+    words = text.split()
+    
+    filtered_words = [w for w in words if w not in stopword_list]
+
+    text_without_stopwords = ' '.join(filtered_words)
+
+    return text_without_stopwords
+
+
+def advanced_clean(text, l = False, s = False, extra_words = None, exclude_words = None):
+    
+    if extra_words is None:
+        extra_words = []
+        
+    if exclude_words is None:
+        exclude_words = [] 
+    
+    text = basic_clean2(text)
+    text = tokenize2(text)
+    text = remove_stopwords2(text, extra_words = extra_words, exclude_words = exclude_words)
+    
+    if l is not False:
+        
+        text = lemmatize2(text)
+    
+    if s is not False:
+    
+        text = stem2(text)
+    
+    return text

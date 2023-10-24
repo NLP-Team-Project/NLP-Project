@@ -136,4 +136,6 @@ def acquire_repos():
     repo = pd.read_csv('all_repos.csv')
     repo = prp.cleanse(repo, 'readme_contents')
     repo.language = prp.top_languages(repo, 4)
+    repo['readme_length'] = repo['readme_contents'].apply(len)
+    repo['unique_word'] = repo['clean'].apply(lambda x: len(set(x)))
     return repo
