@@ -3,6 +3,7 @@ Scraping githubs and discovering most frequent program languages.
 
 ## Description
 
+This project involves using the GitHub API to gather README contents from various repositories, employing Natural Language Processing techniques to preprocess the data, and ultimately constructing a classification model. This model's primary purpose is to predict the programming language used in each repository based on the textual information within the READMEs and the frequencies of words, thereby enabling automated language classification for a wide range of GitHub repositories.
 
 ## Goal
 
@@ -64,3 +65,6 @@ Scraping githubs and discovering most frequent program languages.
 Enviroment setup: 
 - Install Conda, Python, MySql, VS Code or Jupyter Notebook
 - Clone this repo 
+
+Storytelling:
+- https://www.canva.com/design/DAFyHJlc0d4/cy5-1CugYAstdwNWzpAk5g/edit?utm_content=DAFyHJlc0d4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
