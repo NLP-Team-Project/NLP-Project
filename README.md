@@ -25,42 +25,43 @@ Scraping githubs and discovering most frequent program languages.
 - Create a web scraper to acquire repo names and use api request to acquire repo data
 - Clean up the data by tokenizing it, lammatizing, stemming, remove non ASCII characters, etc...
 - Explore data to find what words are most common in what language's repo
-- Create models to 
+- Create models to predict primary programming language of a repo
+
 
 ## Acquisition:
   
-  - Create a web scraper to acquire repo names and use api request to acquire repo data
+- Create a web scraper to acquire repo names
+- Use api request to acquire repo data
+- Cache data
+- Data acquired from Github
 
-- Data acquired from Coursera into a csv file
 
 ## Preparation
-- Renamed columns& lowercased column names
-- No missing values
-- Dropped LoanID column
-- Split data 70%,15%,15%
+- Remove all non alphanumeric characters
+- Lowercase everything
+- Tokenize all words
+- Drop all nulls, and invalid data types
+- Lemmatize and stem data
+
 
 ## Exploration & pre-processing:
 - Made visuals and used stats to understand which features had a significance
 - Binned data for better visuals
+- Created word-count dataframes to see in how many documents a word appears in and how many times a word appears
+
 
 ## Modeling:
-- Decision tree and random forest models with balanced weight parameters perform worse than the baseline
-- Distribution of default binary values heavily concentrated on one value
-- Knearest tree is weighing one outcome significantly more than the other
+- Modeling will be focused around improving accuracy score of the model
+- Baseline had an accuracy of 43%
+- Models improved significantly when class_weight was set to 'balanced'
+- Models consistenly scored in the 60s
+- Removing words with very high/low usage helped slightly
 
-## Delivery:
-- Deployed my model and a reproducable report
-- Made recommendations
 
 ## Key findings, recommendations, and takeaways
-- Distribution of defaults significantly concentrated on non defaults (0)
-- Interest rates, loan amount, and age seem to drive borrrowers to default on loans
-- Target loan amounts lowers than 150k
-- Require higher qualifications for younger population 
-- Target borrowers with low interest rates
+We can create models to predict the primary language of a repository based off the readme contents in that repository. By web-scraping repository names from Github and looping through api requests we created a data frame of repository information. Through exploration we found many words that appeared in many many repositories and words that appeared in very few. Removing these words seemed to help model accuracy just slightly. Our best models were able to accurately predict the language of a repository around 2/3 of the time. Binning languages into a single ‘other’ category helped incredibly, however it also means we are not guessing the actual language of a repository but rather a ‘group’ of languages.
 
-## Instructions or an explanation of how someone else can reproduce project and findings
 
-Enviroment setup: 
+## Enviroment setup: 
 - Install Conda, Python, MySql, VS Code or Jupyter Notebook
-- Clone this repo 
+- Github api token
